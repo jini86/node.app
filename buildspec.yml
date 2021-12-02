@@ -14,7 +14,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      -  docker build --rm -f Dockerfile -t nodegit:v1 .
+      - docker build --rm -f Dockerfile -t nodegit:v1 .
       - docker tag $REPOSITORY_URI:v1 $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
