@@ -16,9 +16,9 @@ phases:
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 --storage-driver=overlay&
       - echo $REPOSITORY_URI
       - echo $IMAGE_TAG
-      - docker tag nodegit:v1  $REPOSITORY_URI:$IMAGE_TAG .
+      - docker tag nodegit:v1  $881863418650.dkr.ecr.us-east-1.amazonaws.com/nodegit:$v1 .
       - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push REPOSITORY_URI=881863418650.dkr.ecr.us-east-1.amazonaws.com/nodegit:v1
   post_build:
     commands:
       - echo Writing image definitions file...
