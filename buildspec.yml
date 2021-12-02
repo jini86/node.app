@@ -16,7 +16,7 @@ phases:
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 --storage-driver=overlay&
       - echo $REPOSITORY_URI
       - echo $IMAGE_TAG
-      - docker tag nodegit:v1$881863418650.dkr.ecr.us-east-1.amazonaws.com/nodegit:$v1 
+      - docker tag nodegit:v1 $881863418650.dkr.ecr.us-east-1.amazonaws.com/nodegit:v1 
       - echo Build started on `date`
       - echo Building the Docker image...
       - docker build --rm -f Dockerfile -t nodegit:v1 .
