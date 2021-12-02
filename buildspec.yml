@@ -4,6 +4,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - pip install awscli --upgrade --user
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
@@ -12,10 +13,14 @@ phases:
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 --storage-driver=overlay&
+      - echo $REPOSITORY_URI
+      - echo $IMAGE_TAG
+      - docker tag nodegit:v1$881863418650.dkr.ecr.us-east-1.amazonaws.com/nodegit:$v1 . 
       - echo Build started on `date`
       - echo Building the Docker image...
       - docker build --rm -f Dockerfile -t nodegit:v1 .
-      - docker tag $REPOSITORY_URI:v1 $REPOSITORY_URI:$IMAGE_TAG
+      - docker tag $REPOSITORY_URI=881863418650.dkr.ecr.us-east-1.amazonaws.com/nodegit:v1
   post_build:
     commands:
       - echo Build completed on `date`
