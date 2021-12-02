@@ -9,7 +9,7 @@ phases:
       - pip install awscli --upgrade --user
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-      - REPOSITORY_URI=docker tag new:latest 881863418650.dkr.ecr.us-east-1.amazonaws.com/nodegit:latest
+      - REPOSITORY_URI=881863418650.dkr.ecr.us-east-1.amazonaws.com/nodegit:latest
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
   build:
     commands:
