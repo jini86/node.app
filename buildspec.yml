@@ -1,25 +1,28 @@
 version: 0.2
+
+
 phases:
-  install:
-    runtime-versions:
-      nodejs: 12
-    commands:
-      - echo Installing
   pre_build:
     commands:
-      - echo Installing source NPM dependencies.
-      - npm install
-      - pip install awscli --upgrade --user
       - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 881863418650.dkr.ecr.us-east-1.amazonaws.com $)
-      - REPOSITORY_URL=881863418650.dkr.ecr.us-east-1.amazonaws.com/repo
+      - aws --version
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - REPOSITORY_URI=077708451457.dkr.ecr.ap-south-1.amazonaws.com/node-app
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
-      - docker build -t node-app .
-      - docker tag node-app:latest 881863418650.dkr.ecr.us-east-1.amazonaws.com/repo:latest   
-      - docker push 881863418650.dkr.ecr.us-east-1.amazonaws.com/repo:latest
-      - npm run build
-  
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $077708451457.dkr.ecr.ap-south-1.amazonaws.com/node-app:latest .
+      - docker tag $077708451457.dkr.ecr.ap-south-1.amazonaws.com/node-app:latest $077708451457.dkr.ecr.ap-south-1.amazonaws.com/node-app:$node-app:latest
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $077708451457.dkr.ecr.ap-south-1.amazonaws.com/nodegit:$node-app:latest
+      - echo Writing image definitions file...
+      - printf '[{"name":"node-app","imageUri":077708451457.dkr.ecr.ap-south-1.amazonaws.com/node-app:$node-app:latest"}]' $077708451457.dkr.ecr.ap-south-1.amazonaws.com/nodegit:$node-app:latest > imagedefinitions.json
+      - cat imagedefinitions.json 
 artifacts:
-  files:
-    - '**/*'
+    files: imagedefinitions.json
